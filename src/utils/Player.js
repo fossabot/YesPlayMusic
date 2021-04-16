@@ -1,5 +1,5 @@
 import { getTrackDetail, scrobble, getMP3 } from "@/api/track";
-import { shuffle } from "lodash";
+import shuffle from "lodash/shuffle";
 import { Howler, Howl } from "howler";
 import { cacheTrackSource, getTrackSource } from "@/utils/db";
 import { getAlbum } from "@/api/album";
@@ -160,9 +160,12 @@ export default class {
     this._shuffledList = shuffle(list);
     if (firstTrackID !== "first") this._shuffledList.unshift(firstTrackID);
   }
-  async _scrobble(track, time, complete = false) {
+  async _scrobble(track, time, completed = false) {
+    console.debug(
+      `[debug][Player.js] scrobble track 👉 ${track.name} by ${track.ar[0].name} 👉 time:${time} completed: ${completed}`
+    );
     const trackDuration = ~~(track.dt / 1000);
-    time = complete ? trackDuration : time;
+    time = completed ? trackDuration : ~~time;
     scrobble({
       id: track.id,
       sourceid: this.playlistSource.id,
@@ -247,7 +250,9 @@ export default class {
     autoplay = true,
     ifUnplayableThen = "playNextTrack"
   ) {
-    if (autoplay) this._scrobble(this.currentTrack, this._howler.seek(), true);
+    if (autoplay && this._currentTrack.name) {
+      this._scrobble(this.currentTrack, this._howler?.seek());
+    }
     return getTrackDetail(id).then((data) => {
       let track = data.songs[0];
       this._currentTrack = track;
@@ -267,8 +272,11 @@ export default class {
     });
   }
   _cacheNextTrack() {
-    const nextTrack = this._getNextTrack();
-    getTrackDetail(nextTrack[0]).then((data) => {
+    let nextTrackID = this._isPersonalFM
+      ? this._personalFMNextTrack.id
+      : this._getNextTrack()[0];
+    if (!nextTrackID) return;
+    getTrackDetail(nextTrackID).then((data) => {
       let track = data.songs[0];
       this._getAudioSource(track);
     });
@@ -342,6 +350,7 @@ export default class {
     }
   }
   _nextTrackCallback() {
+    this._scrobble(this._currentTrack, 0, true);
     if (this.repeatMode === "one") {
       this._replaceCurrentTrack(this._currentTrack.id);
     } else {
@@ -499,6 +508,9 @@ export default class {
     });
   }
   playPlaylistByID(id, trackID = "first", noCache = false) {
+    console.debug(
+      `[debug][Player.js] playPlaylistByID 👉 id:${id} trackID:${trackID} noCache:${noCache}`
+    );
     getPlaylistDetail(id, noCache).then((data) => {
       let trackIDs = data.playlist.trackIds.map((t) => t.id);
       this.replacePlaylist(trackIDs, id, "playlist", trackID);
