@@ -180,6 +180,7 @@ API 源代码来自 [Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryif
 ![search][search-screenshot]
 ![home][home-screenshot]
 ![explore][explore-screenshot]
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flnzhangsong%2FYesPlayMusic.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Flnzhangsong%2FYesPlayMusic?ref=badge_shield)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -193,3 +194,7 @@ API 源代码来自 [Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryif
 [library-screenshot]: images/library.png
 [library-dark-screenshot]: images/library-dark.png
 [search-screenshot]: images/search.png
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flnzhangsong%2FYesPlayMusic.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Flnzhangsong%2FYesPlayMusic?ref=badge_large)
